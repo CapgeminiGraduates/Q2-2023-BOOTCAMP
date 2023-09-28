@@ -3,11 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home page</title>
+    <title>Sign Up Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .logo-placeholder {
+            width: 6.25rem;
+            height: 6.25rem;
+            background-color: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 0.625rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        input, button {
+            margin-bottom: 0.625rem;
+            padding: 0.625rem;
+            font-size: 1em;
+            width: 50rem;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 0.3125rem; /* 5px/16 */
+            width: 10rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>This is the home page</h1>
-
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat ducimus animi illum reprehenderit ratione, quae suscipit minima! Quod facilis, quam exercitationem rerum, repellendus ex veniam amet dignissimos at, laboriosam blanditiis?</p>
+    <div class="modal">
+        <h class="logo-placeholder">LOGO</h>
+        <form action="/signup" method="post">
+            <input type="text" name="firstname" placeholder="First Name" required><br>
+            <input type="text" name="surname" placeholder="Surname" required><br>
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+        </form>
+        <button type="submit">SIGN UP</button>
+    </div>
 </body>
 </html>
