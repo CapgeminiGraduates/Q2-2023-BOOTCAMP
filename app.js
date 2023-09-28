@@ -27,8 +27,6 @@ app.get('/login', (req, res)=>{
 });
 
 
-
-
 app.listen(80, ()=>{
     console.log('APP IS LISTENING ON PORT 80');
 });
