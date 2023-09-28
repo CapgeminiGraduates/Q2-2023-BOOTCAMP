@@ -24,7 +24,10 @@ const userSchema = new mongoose.Schema({
     experience: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Experience',
-    }, 
+    },
+    introduction:{
+        type: String,
+    } 
 }); 
 
 //Adds username, and hashed password field to schema and document automatically

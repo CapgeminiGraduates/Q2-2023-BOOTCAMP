@@ -53,6 +53,9 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 
+const flash = require('connect-flash');
+app.use(flash());
+
 //Authentication requirements
 const passport = require("passport"); 
 const LocalStrategy = require("passport-local"); 
@@ -70,7 +73,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.get('/signup', (req, res)=>{
-    res.render('testSignup');
+    // res.render('testSignup');
     res.render('signup');
 });
 
@@ -81,25 +84,22 @@ app.get('/profile', (req, res)=>{
 const authenticateUser = passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'})
 
 app.get('/login', async (req, res)=>{
-    res.render('testlogin');
+    res.render('login');
 });
 
-app.post('/login', authenticateUser, async (req, res, next)=>{
-    // res.send('SUCCESSFUL LOGIN')
-    // req.logOut(function(err){
-    //     if(err){
-    //         return next(err); 
-    //     }
-    // })
-
-    res.redirect('/home'); 
-})
+app.post('/login', authenticateUser, async (req, res) =>{
+    console.log(req.body);
+    const {email} = req.body;
+    const loggedInUser = await User.findOne({email:email})
+    // res.send('SUCCESSFUL LOGIN');
+    res.render('profiletest', {loggedInUser});
+});
 
 app.post('/signup', async(req, res)=>{
     const {username, email, firstname, surname, password} = req.body;
     const user = await new User({username, email, firstname, surname}); 
-    const registeredUser = await User.register(user, password);
-    res.render('profiletest', {registeredUser}); 
+    const loggedInUser = await User.register(user, password);
+    res.render('profiletest', {loggedInUser}); 
 });
 
 app.get('/home', async(req, res)=>{
