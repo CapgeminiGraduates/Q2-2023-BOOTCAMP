@@ -7,6 +7,8 @@ const app = express();
 const User = require("./models/user");
 const Experience = require("./models/experience"); 
 
+const ejsMate = require('ejs-mate');
+
 app.use(express.urlencoded({extended:true}));
 
 const dbUrl = 'mongodb://localhost:27017/capgeniusBase'; 
@@ -17,12 +19,6 @@ mongoose.connect(dbUrl).then(()=>{
     console.log('MONGO CONNECTION ERROR');
     console.log(err); 
 });
-// mongoose.connect('mongodb://localhost:27017/capgeniusBase').then(()=>{
-//     console.log('MONGO CONNECTION OPEN');
-// }).catch((err)=>{
-//     console.log('MONGO CONNECTION ERROR');
-//     console.log(err); 
-// });
 
 const store = mongoDBStore.create({
     mongoUrl: dbUrl,
@@ -56,6 +52,7 @@ app.use(session(sessionConfig));
 const flash = require('connect-flash');
 app.use(flash());
 
+
 //Authentication requirements
 const passport = require("passport"); 
 const LocalStrategy = require("passport-local"); 
@@ -69,47 +66,81 @@ passport.use(new LocalStrategy(User.authenticate())); //Adds authenticate() meth
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+const authenticateUser = passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'})
+
+const isLoggedIn = (req, res, next)=>{
+    if(!req.isAuthenticated()){
+        req.flash('error', 'You must be signed in!');
+        res.redirect('/login'); 
+    }
+    next(); 
+}
+
+app.use((req, res, next)=>{
+    res.locals.currentUser = req.user; 
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error'); 
+    next(); 
+})
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", ejsMate)
 
 app.get('/signup', (req, res)=>{
-    // res.render('testSignup');
     res.render('signup');
 });
 
-app.get('/profile', (req, res)=>{
-    res.render('profile');
+app.post('/signup', async(req, res)=>{
+
+    try{
+        const {username, email, firstname, surname, password} = req.body;
+        const user = await new User({username, email, firstname, surname}); 
+        const newUser = await User.register(user, password);
+        req.login(newUser, function(err){
+            if(err){
+                return next(err)
+            }
+            req.flash('success', 'Welcome to your account!')
+            res.redirect('/profiles');
+        });
+    }catch(err){
+        req.flash('error', err);
+        res.redirect('/signup')
+    };
 });
 
-const authenticateUser = passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'})
+app.get('/profiles', isLoggedIn, async (req, res)=>{
+    const allUsers = await User.find({});
+    res.render('allProfiles', {allUsers});
+});
+
+app.get('/profiles/:id', isLoggedIn, async (req, res)=>{
+    const {id} = req.params; 
+    const user = await User.findById(id); 
+    res.render('userProfile', {user}); 
+});
+
 
 app.get('/login', async (req, res)=>{
     res.render('login');
 });
 
 app.post('/login', authenticateUser, async (req, res) =>{
-    console.log(req.body);
-    const {email} = req.body;
-    const loggedInUser = await User.findOne({email:email})
-    // res.send('SUCCESSFUL LOGIN');
-    res.render('profiletest', {loggedInUser});
+    req.flash('success', 'Welcome back!'); 
+    res.redirect('/profiles');
 });
 
-app.post('/signup', async(req, res)=>{
-    const {username, email, firstname, surname, password} = req.body;
-    const user = await new User({username, email, firstname, surname}); 
-    const loggedInUser = await User.register(user, password);
-    res.render('profiletest', {loggedInUser}); 
+app.get('/logout', async (req, res)=>{
+    req.logOut(function(err){
+        if(err){
+            return next(err);
+        }
+        req.flash('success', 'Come back soon!');
+        res.redirect('/login');
+    });
 });
 
-app.get('/home', async(req, res)=>{
-    const allUsers = await User.find({}); 
-    res.render('home', {allUsers});
-});
-
-// app.get('/profiletest', (req, res)=>{
-    
-// })
 
 app.listen(80, ()=>{
     console.log('APP IS LISTENING ON PORT 80');

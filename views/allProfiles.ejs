@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate')%>
+    <a href="/logout">Logout</a>
+    <% for(let user of allUsers){%>
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <%= user.firstname + ' ' + user.surname %>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= user.introduction %></h5>
+                    <p class="card-text">Placeholder</p>
+                    <p class="card-text">
+                        <small class="text-muted">Placeholder</small>
+                    </p>
+                    <a class="btn btn-primary" href="/profiles/<%= user._id%>">View Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%}%>

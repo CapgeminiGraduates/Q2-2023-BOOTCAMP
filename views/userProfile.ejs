@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <%= user.firstname + ' ' + user.surname %>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Current job title</h5>
+                    <p class="card-text">user experience</p>
+                    <p class="card-text">
+                        <small class="text-muted">other stuff</small>
+                    </p>
+                    <a class="btn btn-primary" href="/profiles">All Profiles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
