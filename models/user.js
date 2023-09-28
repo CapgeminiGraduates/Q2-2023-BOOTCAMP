@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); 
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new mongoose.Schema({
     firstname:{
@@ -19,9 +20,16 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required: true, 
         unique: true,
+    },
+    experience: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Experience',
     }, 
 }); 
 
-const User = mongoose.Model('User', userSchema);
+//Adds username, and hashed password field to schema and document automatically
+//Ensures username is unique
+//Provides additional methods
+userSchema.plugin(passportLocalMongoose);
 
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);
