@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production"){
+    require("dotenv").config();
+}
+
 const express = require("express"); 
 const mongoose = require("mongoose"); 
 const path = require("path");
@@ -11,7 +15,8 @@ const ejsMate = require('ejs-mate');
 
 app.use(express.urlencoded({extended:true}));
 
-const dbUrl = 'mongodb://localhost:27017/capgeniusBase'; 
+// const dbUrl = 'mongodb://localhost:27017/capgeniusBase'; 
+const dbUrl = process.env.DB_URL;
 
 mongoose.connect(dbUrl).then(()=>{
     console.log('MONGO CONNECTION OPEN');
@@ -35,7 +40,7 @@ store.on('error', function(e){
 const session = require('express-session'); 
 
 const sessionConfig = {
-    store: store, 
+    // store: store, 
     name: 'session',
     secret: 'thisshouldbeasecret', 
     resave: false, 
@@ -142,6 +147,6 @@ app.get('/logout', async (req, res)=>{
 });
 
 
-app.listen(80, ()=>{
-    console.log('APP IS LISTENING ON PORT 80');
+app.listen(8080, ()=>{
+    console.log('APP IS LISTENING ON PORT 8080');
 });
