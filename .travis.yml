@@ -1,0 +1,21 @@
+sudo: required
+services: 
+  - docker
+
+before_install: 
+  - docker build -t saifulishaq/capgemini-bootcamp -f Dockerfile.dev .
+
+script: 
+  - docker run -e CI=true saifulishaq/capgemini-bootcamp npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: ""
+  app: ""
+  env: ""
+  bucket_name: ""
+  bucket_path: ""
+  on: 
+    branch: main
+  access_key_id: ""
+  secret_access_key: ""
