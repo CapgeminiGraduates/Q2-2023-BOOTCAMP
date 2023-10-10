@@ -14,9 +14,10 @@ const Experience = require("./models/experience");
 const ejsMate = require('ejs-mate');
 
 app.use(express.urlencoded({extended:true}));
+app.use(express.static("public"));
 
 // const dbUrl = 'mongodb://localhost:27017/capgeniusBase'; 
-const dbUrl = process.env.DB_URL;
+const dbUrl = "mongodb+srv://saifulishaq:M0nday_10q@cluster0.hxaykuv.mongodb.net/"
 
 mongoose.connect(dbUrl).then(()=>{
     console.log('MONGO CONNECTION OPEN');
@@ -34,7 +35,7 @@ const store = mongoDBStore.create({
 });
 
 store.on('error', function(e){
-    console.log('SESSION STORE ERROR', e);
+    console.log('SESSION STORE ERROR!', e);
 });
 
 const session = require('express-session'); 
@@ -92,6 +93,10 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate)
 
+app.get('/', (req, res)=>{
+    res.redirect('/login'); 
+});
+
 app.get('/signup', (req, res)=>{
     res.render('signup');
 });
@@ -147,6 +152,6 @@ app.get('/logout', async (req, res)=>{
 });
 
 
-app.listen(8080, ()=>{
+app.listen(80, ()=>{
     console.log('APP IS LISTENING ON PORT 8080');
 });

@@ -1,21 +1,129 @@
-<% layout('layouts/boilerplate')%>
-    <a href="/logout">Logout</a>
-    <% for(let user of allUsers){%>
-    <div class="card mb-3">
-        <div class="row">
-            <div class="col-md-4">
-                <%= user.firstname + ' ' + user.surname %>
+<% layout('layouts/boilerplate') %>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Profiles</title>
+    <style>
+        body, html {
+            margin: 0;
+            color: #000;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(132deg, #fff, #88d5ed, #7fb7d6);
+            background-size: 400% 400%;
+            animation: Gradient 10s ease infinite;
+        }
+
+        @keyframes Gradient {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        header {
+        display: flex; /* Added to make the content within the header flex items */
+        justify-content: center; /* Center the flex items horizontally */
+        align-items: center; /* Center the flex items vertically, not mandatory but makes it perfectly centered */
+        width: 100%; /* Ensuring the header takes the full width of the viewport */
+        }
+
+        .logo {
+            width: 25rem;
+            height: auto;
+        }
+
+        .profiles-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            width: calc(33.333% - 20px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card-title {
+            color: #0070ad;
+        }
+
+        a {
+            color: #fff;
+            background-color: #0070ad;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        a:hover {
+            background-color: #11acdb;
+        }
+
+        .logout {
+            color: #fff;
+            background-color: #0070ad;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout:hover {
+            background-color: #11acdb;
+        }
+
+        @media (max-width: 960px) {
+            .card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 680px) {
+            .card {
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/logout" class="logout">Logout</a>
+
+    <header>
+        <img src="/capgeniusLogo.png" alt="Capgenius Logo" class="logo">
+    </header>
+
+    <div class="profiles-container">
+        <% for(let user of allUsers){ %>
+            <div class="card">
+                <h2><%= user.firstname + ' ' + user.surname %></h2>
+                <h5 class="card-title"><%= user.introduction %></h5>
+                <p class="card-text">Placeholder</p>
+                <small class="text-muted">Placeholder</small>
+                <a href="/profiles/<%= user._id %>">View Profile</a>
             </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title"><%= user.introduction %></h5>
-                    <p class="card-text">Placeholder</p>
-                    <p class="card-text">
-                        <small class="text-muted">Placeholder</small>
-                    </p>
-                    <a class="btn btn-primary" href="/profiles/<%= user._id%>">View Profile</a>
-                </div>
-            </div>
-        </div>
+        <% } %>
     </div>
-    <%}%>
+
+</body>
+</html>
